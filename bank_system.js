@@ -1,31 +1,39 @@
 class BankAccount {
+  #saldo = 0;
+  #transactions = [];
   constructor(pemilik, norek) {
     this.pemilik = pemilik;
     this.norek = norek;
-    this.saldo = 0;
-    this.transactions = [];
   }
 
   deposit(amount) {
-    this.addTransactions("Deposit", this.saldo, amount, this.saldo + amount);
-    this.saldo += amount;
+    this.#addTransactions("Deposit", this.#saldo, amount, this.#saldo + amount);
+    this.#saldo += amount;
     return true;
   }
 
   withdraw(amount) {
-    this.addTransactions("Withdrawal", this.saldo, amount, this.saldo - amount);
-    this.saldo -= amount;
+    this.#addTransactions("Withdrawal", this.#saldo, amount, this.#saldo - amount);
+    this.#saldo -= amount;
     return true;
   }
 
-  addTransactions(type, curSaldo, amount, newSaldo) {
-    this.transactions.push({
+  #addTransactions(type, curSaldo, amount, newSaldo) {
+    this.#transactions.push({
       type,
       curSaldo,
       amount,
       newSaldo,
     });
     return;
+  }
+
+  getTransactions() {
+    return this.#transactions;
+  }
+
+  getSaldo() {
+    return this.#saldo;
   }
 }
 
@@ -44,12 +52,11 @@ function tambahSaldo() {
   setTimeout(() => {
     if (!isiSaldo.match(numberRegEx)) {
       alert("Gagal menambah saldo, mohon masukkan input yang valid");
-      tambahSaldo();
       return;
     }
     Krisna.deposit(parseInt(isiSaldo));
     updateData();
-    textSaldo.innerText = Krisna.saldo;
+    textSaldo.innerText = Krisna.getSaldo();
     alert("Berhasil menambah saldo");
   }, 500);
   return;
@@ -64,23 +71,22 @@ function kurangSaldo() {
   setTimeout(() => {
     if (!isiSaldo.match(numberRegEx)) {
       alert("Gagal mengurangi saldo, mohon masukkan input yang valid");
-      kurangSaldo();
       return;
     }
-    if (Krisna.saldo - parseInt(isiSaldo) < 0) {
+    if (Krisna.getSaldo() - parseInt(isiSaldo) < 0) {
       alert("Gagal mengurangi saldo, anda tidak memiliki cukup saldo");
-      kurangSaldo();
       return;
     }
     Krisna.withdraw(parseInt(isiSaldo));
     updateData();
-    textSaldo.innerText = Krisna.saldo;
+    textSaldo.innerText = Krisna.getSaldo();
     alert("Berhasil mengurangi saldo");
   }, 500);
   return;
 }
 
 function updateData() {
+  let dataTransactions = Krisna.getTransactions();
   let table = "";
   table += `
   <table>
@@ -91,7 +97,7 @@ function updateData() {
             <th>Saldo Akhir</th>
           </tr>
   `;
-  Krisna.transactions.forEach((e) => {
+  dataTransactions.forEach((e) => {
     table += `<tr>
         <td>${e.type}</td>
         <td>${e.curSaldo}</td>
