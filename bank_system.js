@@ -9,13 +9,16 @@ class BankAccount {
   deposit(amount) {
     this.#addTransactions("Deposit", this.#saldo, amount, this.#saldo + amount);
     this.#saldo += amount;
-    return true;
+    return;
   }
 
   withdraw(amount) {
+    if (this.#saldo - amount < 0) {
+      throw new Error("Jumlah saldo tidak mencukupi");
+    }
     this.#addTransactions("Withdrawal", this.#saldo, amount, this.#saldo - amount);
     this.#saldo -= amount;
-    return true;
+    return;
   }
 
   #addTransactions(type, curSaldo, amount, newSaldo) {
@@ -48,12 +51,13 @@ function tambahSaldo() {
   if (!isiSaldo) {
     return;
   }
+  if (!isiSaldo.match(numberRegEx)) {
+    alert("Gagal menambah saldo, mohon masukkan input yang valid");
+    tambahSaldo();
+    return;
+  }
   alert("Transaksi sedang diproses, mohon tunggu...");
   setTimeout(() => {
-    if (!isiSaldo.match(numberRegEx)) {
-      alert("Gagal menambah saldo, mohon masukkan input yang valid");
-      return;
-    }
     Krisna.deposit(parseInt(isiSaldo));
     updateData();
     textSaldo.innerText = Krisna.getSaldo();
@@ -67,20 +71,21 @@ function kurangSaldo() {
   if (!isiSaldo) {
     return;
   }
+  if (!isiSaldo.match(numberRegEx)) {
+    alert("Gagal mengurangi saldo, mohon masukkan input yang valid");
+    kurangSaldo();
+    return;
+  }
   alert("Transaksi sedang diproses, mohon tunggu...");
   setTimeout(() => {
-    if (!isiSaldo.match(numberRegEx)) {
-      alert("Gagal mengurangi saldo, mohon masukkan input yang valid");
-      return;
+    try {
+      Krisna.withdraw(parseInt(isiSaldo));
+      updateData();
+      textSaldo.innerText = Krisna.getSaldo();
+      alert("Berhasil mengurangi saldo");
+    } catch (error) {
+      alert(error.message);
     }
-    if (Krisna.getSaldo() - parseInt(isiSaldo) < 0) {
-      alert("Gagal mengurangi saldo, anda tidak memiliki cukup saldo");
-      return;
-    }
-    Krisna.withdraw(parseInt(isiSaldo));
-    updateData();
-    textSaldo.innerText = Krisna.getSaldo();
-    alert("Berhasil mengurangi saldo");
   }, 500);
   return;
 }
