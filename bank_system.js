@@ -1,3 +1,4 @@
+// Membuat Kelas Akun Bank
 class BankAccount {
   #saldo = 0;
   #transactions = [];
@@ -40,8 +41,35 @@ class BankAccount {
   }
 }
 
-const Krisna = new BankAccount("Krisna", "02341398");
+// Deklarasi Variable Akun
+let UserAccount;
 
+// Membuat fungsi buat akun
+function buatAkun() {
+  let input = document.getElementById("input");
+  let nameInput = document.getElementById("input-nama");
+  let textName = document.getElementById("text-nama");
+  let displaySaldo = document.getElementById("saldo");
+  let displayTransaction = document.getElementById("transaction");
+
+  if (!nameInput.value) {
+    alert("Nama harus dimasukkan");
+    return;
+  }
+  UserAccount = new BankAccount(nameInput.value, "98979679");
+
+  input.innerHTML = "<h2>Sedang membuat akun....</h2>";
+  setTimeout(() => {
+    input.innerHTML = "";
+    input.classList.add("d-none");
+    textName.innerText = `Halo ${UserAccount.pemilik}, jumlah saldo anda adalah`;
+    displaySaldo.classList.remove("d-none");
+    displayTransaction.classList.remove("d-none");
+    console.log(UserAccount.pemilik);
+  }, 2000);
+}
+
+// Flow untuk deposit dan withdraw
 let textSaldo = document.getElementById("text-saldo");
 let numberRegEx = /^(?!0\d)\d+$/;
 let data = document.getElementById("tableData");
@@ -58,9 +86,9 @@ function tambahSaldo() {
   }
   alert("Transaksi sedang diproses, mohon tunggu...");
   setTimeout(() => {
-    Krisna.deposit(parseInt(isiSaldo));
+    UserAccount.deposit(parseInt(isiSaldo));
     updateData();
-    textSaldo.innerText = Krisna.getSaldo();
+    textSaldo.innerText = UserAccount.getSaldo();
     alert("Berhasil menambah saldo");
   }, 500);
   return;
@@ -79,9 +107,9 @@ function kurangSaldo() {
   alert("Transaksi sedang diproses, mohon tunggu...");
   setTimeout(() => {
     try {
-      Krisna.withdraw(parseInt(isiSaldo));
+      UserAccount.withdraw(parseInt(isiSaldo));
       updateData();
-      textSaldo.innerText = Krisna.getSaldo();
+      textSaldo.innerText = UserAccount.getSaldo();
       alert("Berhasil mengurangi saldo");
     } catch (error) {
       alert(error.message);
@@ -91,7 +119,7 @@ function kurangSaldo() {
 }
 
 function updateData() {
-  let dataTransactions = Krisna.getTransactions();
+  let dataTransactions = UserAccount.getTransactions();
   let table = "";
   table += `
   <table>

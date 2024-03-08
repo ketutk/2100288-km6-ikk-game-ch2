@@ -54,6 +54,10 @@
         align-items: center;
         overflow-x: auto;
       }
+
+      .d-none {
+        display: none;
+      }
       table,
       th,
       td {
@@ -72,17 +76,27 @@
     </style>
   </head>
   <body>
-    <div class="card">
-      <div class="text">
-        <h1>Jumlah saldo anda saat ini adalah</h1>
-        <h1 id="text-saldo">0</h1>
+    <div class="card" id="card">
+      <div class="d-none" id="saldo">
+        <div class="text">
+          <h1 id="text-nama"></h1>
+          <h1 id="text-saldo">0</h1>
+        </div>
+        <div class="btn-me">
+          <button onclick="tambahSaldo()">Tambah Saldo</button>
+          <button onclick="kurangSaldo()">Kurangi Saldo</button>
+        </div>
       </div>
-      <div class="btn-me">
-        <button onclick="tambahSaldo()">Tambah Saldo</button>
-        <button onclick="kurangSaldo()">Kurangi Saldo</button>
+      <div id="input">
+        <label for="input-nama">Masukkan nama anda : </label>
+        <br />
+        <input type="text" id="input-nama" style="margin-bottom: 10px" />
+        <div class="btn-me">
+          <button onclick="buatAkun()">Buat Akun</button>
+        </div>
       </div>
     </div>
-    <div class="transaction">
+    <div class="transaction d-none" id="transaction">
       <h2>Riwayat Transaksi Saldo</h2>
 
       <div id="tableData"></div>
